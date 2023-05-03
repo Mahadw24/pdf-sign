@@ -52,7 +52,6 @@ const PdfSignature = ({ pdf }) => {
         width: '100%',
         height: '100%',
         zIndex: 10,
-        border:'2px solid yellow'
     };
   
     return (
