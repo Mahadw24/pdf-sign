@@ -13,7 +13,8 @@ const pdfSignIn = () => {
         <>
             <div>
                 <FileUpload onFileChange={handleFileChange}/>
-                {pdf && <PdfSignature pdf={pdf} />}
+                {/* {pdf && <PdfSignature pdf={pdf} />} */}
+                <PdfSignature pdf={pdf}/>
             </div>
         </>
     )

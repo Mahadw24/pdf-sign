@@ -34,7 +34,7 @@
 
 import React,{ useState,useRef } from 'react'
 import PdfViewer from './PdfViewer';
-import SignatureCanvas from 'react-signature-canvas'
+import SignaturePad from 'react-signature-canvas'
 
 const PdfSignature = ({ pdf }) => {
     const [signature, setSignature] = useState(null);
@@ -42,33 +42,38 @@ const PdfSignature = ({ pdf }) => {
 
     const handleSave = () => {
       const signatureDataUrl = signatureRef.current.toDataURL();
-      console.log(signatureDataUrl);
+      setSignature(signatureDataUrl);
     };
 
-    const canvasStyle = {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 10,
-    };
+    // const canvasStyle = {
+    //     position: 'absolute',
+    //     top: 0,
+    //     left: 0,
+    //     width: '100%',
+    //     height: '100%',
+    //     zIndex: 10,
+    // };
   
     return (
       <div style={{ position: 'relative' }}>
-        <PdfViewer pdf={pdf} />
-        <div style={canvasStyle}>
-            <SignatureCanvas
+        <PdfViewer pdf={pdf} signature={signature} />
+        <div className='z-30 border-2 border-blue-500'>
+          <h1>Signature Pad</h1>
+            <SignaturePad
                 ref={signatureRef}
-                penColor="black"
-                canvasProps={{ width: '100%', height: '100%', className: 'signatureCanvas' }}
+                canvasProps={{ className: 'sigContainer' }}
             />
         </div>
-        {signature && (
+        {/* {signature && ( */}
           <button style={{ position: 'absolute', bottom: 20, right: 20 }} onClick={handleSave}>
             Save Signature
           </button>
-        )}
+          {/* {signature !== null ? 
+          <img src={signature} alt="" />
+          :
+          ""
+        } */}
+        {/* )} */}
       </div>
     );
   }
