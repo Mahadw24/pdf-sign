@@ -6,6 +6,9 @@ body{
     background-color: rgb(185, 185, 178);
 }
 
+.react-pdf__Page__textContent.textLayer{
+    display: none;
+}
 
 .container {
     width: 100%;
