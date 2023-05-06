@@ -15,11 +15,12 @@ import { PDFDocument, PDFContentStream, rgb, PDFImage } from "pdf-lib";
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 export default function PdfViewer() {
+  const handleRef = useRef(null);
   const [file, setFile] = useState(null);
   const [numPages, setNumPages] = useState(null);
-  const [pageNumber, setPageNumber] = useState(1);
+  const [pageNumber, setPageNumber] = useState(0);
   const [sigPosition, setSigPosition] = useState({ x: 0, y: 0 });
-  const [sigSize, setSigSize] = useState({ width: 150, height: 50 });
+  const [sigSize, setSigSize] = useState({ width: 100, height: 100 });
 
   // Helper function to convert data URL to Blob object
   function dataURLtoBlob(dataURL) {
@@ -65,13 +66,33 @@ export default function PdfViewer() {
     const signatureBytes = await signatureBlob.arrayBuffer();
     const pngImage = await pdfDoc.embedPng(signatureBytes);
 
+    console.log(pageNumber);
     const pages = pdfDoc.getPages();
-    const firstPage = pages[0];
-    const { width, height } = firstPage.getSize();
+    const Page = pages[pageNumber - 1];
+    const { width, height } = Page.getSize();
 
-    firstPage.drawImage(pngImage, {
-      x: sigPosition.x,
-      y: sigPosition.y,
+    const realWidth = Math.round(width);
+    const realHeight = Math.round(height);
+
+    const mywidth = realWidth - sigPosition.x;
+    const myheight = realHeight - sigPosition.y;
+
+    const w = realWidth - mywidth;
+    const h = realHeight - myheight;
+
+    console.log(sigPosition.x,realWidth,mywidth,sigPosition.y,realHeight,myheight);
+
+    Page.drawImage(pngImage, {
+      x: w,
+      // y: h,
+      // x: mywidth,
+      y: myheight - 100,
+      // x: sigPosition.x,
+      // y: sigPosition.y,
+      // x: realWidth - mywidth,
+      // y: realHeight - myheight,
+      width:100,
+      height:100,
     });
 
     const pdfBytes = await pdfDoc.save();
@@ -98,16 +119,11 @@ export default function PdfViewer() {
 
   const handleDrag = (e, { x, y }) => {
     setSigPosition({ x, y });
-    console.log({ x, y });
-  };
-
-  const handleResize = (e, { size }) => {
-    setSigSize(size);
+    console.log(x,y);
   };
 
   return (
     <div>
-      <input type="file" onChange={onFileChange} />
       {file && (
         <Document
           className="border-2 border-blue-500 w-min h-min"
@@ -116,38 +132,26 @@ export default function PdfViewer() {
         >
           <Page pageNumber={pageNumber}>
             {signature && (
-              <Draggable
+              <Draggable 
                 position={sigPosition}
                 onStop={handleDrag}
-                bounds="parent"
               >
-                <ResizableBox
-                  width={100}
-                  height={100}
-                  minConstraints={[100, 100]}
-                  maxConstraints={[500, 500]}
-                  className="border-2 absolute z-24"
-                  cancel=".resize-handle"
-                >
-                  <img
-                    draggable={false}
-                    src={signature}
-                    alt="Signature"
-                    className="resize-handle"
-                    style={{
-                      position: "absolute",
-                      inset: "0",
-                      width: "100%",
-                      height: "100%",
-                      border: "2px solid black",
-                    }}
-                  />
-                </ResizableBox>
+                <img
+                  draggable={false}
+                  src={signature}
+                  alt="Signature"
+                  className="border-2 border-red-900 p-0 m-0 absolute top-0 left-0"
+                  style={{
+                    width: sigSize.width,
+                    height: sigSize.height,
+                  }}
+                />
               </Draggable>
             )}
           </Page>
         </Document>
       )}
+      <input type="file" onChange={onFileChange} />
       <p>
         Page {pageNumber} of {numPages}
       </p>
