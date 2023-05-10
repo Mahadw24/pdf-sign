@@ -256,13 +256,14 @@ export default function PdfViewer() {
     const signatureBytes = await signatureBlob.arrayBuffer();
     const pngImage = await pdfDoc.embedPng(signatureBytes);
 
-    console.log(pageNumber);
     const pages = pdfDoc.getPages();
     const Page = pages[pageNumber - 1];
     const { width, height } = Page.getSize();
 
     const realWidth = Math.round(width);
     const realHeight = Math.round(height);
+
+    console.log(`Real Width: ${realWidth}, Heigh: ${realHeight}`);
 
     const mywidth = realWidth - sigPosition.x;
     const myheight = realHeight - sigPosition.y;
@@ -271,19 +272,18 @@ export default function PdfViewer() {
     const h = realHeight - myheight;
 
     console.log(
-      sigPosition.x,
-      realWidth,
-      mywidth,
-      sigPosition.y,
-      realHeight,
-      myheight
+      `Implemented Width: ${w}, Heigh: ${
+        realHeight - sigPosition.y - sigSize.height
+      }`
     );
+
+    const ResizableBoxHeight = sigSize.height / 4.685;
 
     Page.drawImage(pngImage, {
       x: w,
       // y: h,
       // x: mywidth,
-      y: myheight - 100,
+      y: realHeight - sigPosition.y - sigSize.height - 1,
       // x: sigPosition.x,
       // y: sigPosition.y,
       // x: realWidth - mywidth,
@@ -308,6 +308,7 @@ export default function PdfViewer() {
   }
 
   const signatureRef = useRef();
+  3000;
 
   const handleSave = () => {
     const signatureDataUrl = signatureRef.current.toDataURL();
@@ -316,7 +317,7 @@ export default function PdfViewer() {
 
   const handleDrag = (e, { x, y }) => {
     setSigPosition({ x, y });
-    console.log(x, y);
+    console.log(`Dragged width: ${x},height:  ${y}`);
   };
 
   const handleResizeStop = (event, { size }) => {
@@ -334,31 +335,33 @@ export default function PdfViewer() {
           <Page pageNumber={pageNumber}>
             {signature && (
               <Draggable
-                  position={sigPosition}
-                  onStop={handleDrag}
-                  cancel=".react-resizable-handle"
-                >
-              <div className="border-2 border-red-900 p-0 m-0 absolute top-0 left-0">
+                position={sigPosition}
+                onStop={handleDrag}
+                cancel=".react-resizable-handle"
+              >
+                <div className=" p-0 m-0 absolute top-0 left-0">
                   <ResizableBox
                     width={sigSize.width}
                     height={sigSize.height}
                     maxConstraints={[150, 150]}
                     minConstraints={[100,100]}
                     onResizeStop={handleResizeStop}
-                  >
+                    className="p-0 m-0 border-2 border-blue-500 w-screen h-screen"
+                    >
                     <img
-                      draggable={false}
+                    draggable={false}
+                    // width={sigSize.width}
+                    // height={sigSize.height}
                       src={signature}
                       alt="Signature"
-                      // className="border-2 border-red-900 p-0 m-0 absolute top-0 left-0"
-                      // style={{
-                      //   width: sigSize.width,
-                      //   height: sigSize.height,
-                      // }}
+                      style={{
+                        width: sigSize.width,
+                        height: sigSize.height,
+                      }}
                     />
                   </ResizableBox>
-              </div>
-                </Draggable>
+                </div>
+              </Draggable>
             )}
           </Page>
         </Document>
