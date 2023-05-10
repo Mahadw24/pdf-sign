@@ -343,15 +343,17 @@ export default function PdfViewer() {
                   <ResizableBox
                     width={sigSize.width}
                     height={sigSize.height}
-                    maxConstraints={[150, 150]}
-                    minConstraints={[100,100]}
-                    onResizeStop={handleResizeStop}
+                    maxConstraints={[400, 400]}
+                    minConstraints={[100, 100]}
+                    lockAspectRatio={true}
+                    onResize={handleResizeStop}
+                    // onResizeStop={handleResizeStop}
                     className="p-0 m-0 border-2 border-blue-500 w-screen h-screen"
-                    >
+                  >
                     <img
-                    draggable={false}
-                    // width={sigSize.width}
-                    // height={sigSize.height}
+                      draggable={false}
+                      // width={sigSize.width}
+                      // height={sigSize.height}
                       src={signature}
                       alt="Signature"
                       style={{
