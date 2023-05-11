@@ -2,44 +2,28 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-    background-color: rgb(185, 185, 178);
+*{
+  margin: 0;
+  padding: 0 !important;
+  box-sizing: border-box;
 }
 
-.react-pdf__Page__textContent.textLayer{
-    display: none;
+body {
+  background-color: rgb(185, 185, 178);
 }
 
-.container {
-    width: 100%;
-    height: 100vh;
-    top: 10%;
-    left: 10%;
+.react-pdf__Page__textContent.textLayer {
+  display: none;
 }
 
 .sigContainer {
-    width: 480px;
-    height: 380px;
-    background-color: #fff;
+  background-color: white;
+  width: 600px;
+  height: 300px;
+  border-radius: 15px;
 }
 
-.sigPad {
-    width: 100%;
-    height: 100%;
+.popup-content {
+  width: 800px !important;
+  height: 400px !important;
 }
-
-.buttons {
-    width: 100%;
-    height: 30px;
-}
-
-.sigImage {
-    background-size: 200px 50px;
-    width: 200px;
-    height: 50px;
-    background-color: white;
-}
-
-/* .react-resizable{
-    position: absolute;
-} */
