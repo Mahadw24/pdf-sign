@@ -18,12 +18,19 @@ body {
 
 .sigContainer {
   background-color: white;
-  width: 600px;
-  height: 300px;
+  width: 425px;
+  height: 250px;
   border-radius: 15px;
 }
 
 .popup-content {
-  width: 800px !important;
-  height: 400px !important;
+  width: 550px !important;
+  height: 350px !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+.popup-overlay{
+  backdrop-filter: none;
+  background: none !important;
 }
