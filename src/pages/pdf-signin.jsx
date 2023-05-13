@@ -28,7 +28,8 @@ export default function PdfViewer() {
   const [textSignature, setTextSignature] = useState(false);
   const signatureRef = useRef();
   const [witnessDetails, setWitnessDetails] = useState({
-    address: "",
+    addressLine1: "",
+    addressLine2: "",
     city: "",
     state: "",
     zipCode: "",
@@ -63,7 +64,7 @@ export default function PdfViewer() {
   //   witnessText: "",
   // });
 
-  const [textSignaturePad,setTextSignaturePad] = useState('');
+  const [textSignaturePad, setTextSignaturePad] = useState("");
 
   const handleTextSignaturePad = () => {
     setOpen(false);
@@ -74,11 +75,13 @@ export default function PdfViewer() {
   const [sigPosition, setSigPosition] = useState({
     employee: { x: 0, y: 0 },
     witness: { x: 0, y: 0 },
+    witnessname: { x: 0, y: 0 },
+    witnessaddress: { x: 0, y: 0 },
   });
 
   const [sigSize, setSigSize] = useState({
-    employee: { width: 100, height: 100 },
-    witness: { width: 100, height: 100 },
+    employee: { width: 50, height: 50 },
+    witness: { width: 50, height: 50 },
   });
 
   function dataURLtoBlob(dataURL) {
@@ -195,12 +198,12 @@ export default function PdfViewer() {
       signatureForWitness == true
         ? setSignature({
             ...signature,
-            witnessSignature:textSignaturePad,
+            witnessSignature: textSignaturePad,
             // witnessSignature: textSignaturePad.witnessText,
           })
-          : setSignature({
+        : setSignature({
             ...signature,
-            employeeSignature:textSignaturePad,
+            employeeSignature: textSignaturePad,
             // employeeSignature: textSignaturePad.employeeText,
           });
     }
@@ -224,6 +227,15 @@ export default function PdfViewer() {
     }
   }
 
+  function handleBrowseSignatrePadCancel() {
+    setBrowseSignaturePad(false);
+    setOpen(true);
+  }
+  function handleTextSignatureCancel() {
+    setTextSignature(false);
+    setOpen(true);
+  }
+
   const handleAddText = async () => {
     const existingPdfBytes = await file.arrayBuffer();
     const pdfDoc = await PDFDocument.load(existingPdfBytes);
@@ -241,8 +253,21 @@ export default function PdfViewer() {
     const mywidthforwitness = realWidth - sigPosition.witness.x;
     const myheightforwitness = realHeight - sigPosition.witness.y;
 
+    const mywidthforwitnessName = realWidth - sigPosition.witnessname.x;
+    const myheightforwitnessName = realHeight - sigPosition.witnessname.y;
+
+    const mywidthforwitnessAddress = realWidth - sigPosition.witnessaddress.x;
+    const myheightforwitnessAddress = realHeight - sigPosition.witnessaddress.y;
+
+
     const wforemployee = realWidth - mywidthforemployee;
     const hforemployee = realHeight - myheightforemployee;
+
+    const wforwitnessname = realWidth - mywidthforwitnessName;
+    const hforwitnessname = realHeight - myheightforwitnessName;
+
+    const wforwitnessaddress = realWidth - mywidthforwitnessAddress;
+    const hforwitnessaddress = realHeight - myheightforwitnessAddress;
 
     const wforwitness = realWidth - mywidthforwitness;
     const hforwitness = realHeight - myheightforemployee;
@@ -313,11 +338,29 @@ export default function PdfViewer() {
       Page.drawText(signature.witnessSignature, {
         x: wforwitness,
         y: realHeight - sigPosition.witness.y - 16,
-        size: 14,
+        size: 12,
         // font: StandardFonts.Helvetica,
         color: rgb(0, 0, 0),
       });
     }
+    // Page.drawText("HelloName", {
+    Page.drawText(witnessName.firstName + witnessName.lastName, {
+      x: wforwitnessname,
+      // x: 20,
+      y: realHeight - sigPosition.witnessname.y - 16,
+      // y: 200,
+      size: 12,
+      color: rgb(0, 0, 0),
+    });
+    // Page.drawText("HelloAddress", {
+    Page.drawText(witnessDetails.addressLine1+witnessDetails.addressLine2 , {
+      x: wforwitnessaddress,
+      // x: 40,
+      y: realHeight - sigPosition.witnessaddress.y - 16,
+      // y: 300,
+      size:12,
+      color:rgb(0,0,0),
+    });
     const pdfBytes = await pdfDoc.save();
     const pdfFile = arrayBufferToFile(
       pdfBytes,
@@ -351,13 +394,14 @@ export default function PdfViewer() {
                     }}
                     cancel=".react-resizable-handle"
                   >
-                    {signatureType.employee == "drawSignature" || signatureType.employee == "imageSignature" ? (
+                    {signatureType.employee == "drawSignature" ||
+                    signatureType.employee == "imageSignature" ? (
                       <div className=" p-0 m-0 absolute top-0 left-0">
                         <ResizableBox
                           width={sigSize.employee.width}
                           height={sigSize.employee.height}
                           maxConstraints={[400, 400]}
-                          minConstraints={[100, 100]}
+                          minConstraints={[50, 50]}
                           lockAspectRatio={true}
                           onResize={(event, { size }) => {
                             setSigSize({
@@ -399,13 +443,14 @@ export default function PdfViewer() {
                     }}
                     cancel=".react-resizable-handle"
                   >
-                    {signatureType.witness == "drawSignature" || signatureType.witness == "imageSignature" ? (
+                    {signatureType.witness == "drawSignature" ||
+                    signatureType.witness == "imageSignature" ? (
                       <div className=" p-0 m-0 absolute top-0 left-0">
                         <ResizableBox
                           width={sigSize.witness.width}
                           height={sigSize.witness.height}
                           maxConstraints={[400, 400]}
-                          minConstraints={[100, 100]}
+                          minConstraints={[50, 50]}
                           lockAspectRatio={true}
                           onResize={(event, { size }) => {
                             setSigSize({
@@ -437,6 +482,40 @@ export default function PdfViewer() {
                         </h1>
                       </div>
                     )}
+                  </Draggable>
+
+                  <Draggable
+                    position={sigPosition.witnessname}
+                    onStop={(e, { x, y }) => {
+                      setSigPosition({
+                        ...sigPosition,
+                        witnessname: { x: x, y: y },
+                      });
+                    }}
+                    cancel=".react-resizable-handle"
+                  >
+                    <div className=" p-0 m-0 absolute top-0 left-0 border-2 border-red-800">
+                      <h1 className="text-[12px]">
+                        {witnessName.firstName} {witnessName.lastName}
+                      </h1>
+                    </div>
+                  </Draggable>
+
+                  <Draggable
+                    position={sigPosition.witnessaddress}
+                    onStop={(e, { x, y }) => {
+                      setSigPosition({
+                        ...sigPosition,
+                        witnessaddress: { x: x, y: y },
+                      });
+                    }}
+                    cancel=".react-resizable-handle"
+                  >
+                    <div className=" p-0 m-0 absolute top-0 left-0 border-2 border-red-800">
+                      <h1 className="text-[12px]">
+                        {witnessDetails.addressLine1} { witnessDetails.addressLine2}
+                      </h1>
+                    </div>
                   </Draggable>
                 </>
               )}
@@ -555,9 +634,7 @@ export default function PdfViewer() {
 
           <div className="w-60 flex justify-around my-3">
             <button
-              onClick={() =>
-                setSignature({ ...signature, employeeSignature: null })
-              }
+              onClick={handleBrowseSignatrePadCancel}
               className="text-xl"
             >
               CANCEL
@@ -572,7 +649,6 @@ export default function PdfViewer() {
         <div className="flex flex-col items-center bg-[#EDEDED]/50 backdrop-filter">
           <h1 className="text-xl mx-34 tracking-widest my-2">SIGNATURE</h1>
           <textarea
-            // onChange={handletextSignature}
             onChange={(e) => setTextSignaturePad(e.target.value)}
             placeholder="TYPE SIGNATURE"
             className="border w-[425px] h-[75px] rounded-xl px-2 py-1 text-black"
@@ -587,9 +663,7 @@ export default function PdfViewer() {
           />
           <div className="w-60 flex justify-around my-3">
             <button
-              onClick={() =>
-                setSignature({ ...signature, employeeSignature: null })
-              }
+              onClick={handleTextSignatureCancel}
               className="text-xl"
             >
               CANCEL
@@ -636,7 +710,7 @@ export default function PdfViewer() {
           </div>
 
           <div className="w-52 flex justify-between my-3">
-            <button>CANCEL</button>
+            <button onClick={() => {setWitnessPopup(false); setOpen(true)}}>CANCEL</button>
             <button
               onClick={() => {
                 setWitnessDetailsPopup(true);
@@ -672,7 +746,7 @@ export default function PdfViewer() {
                 setWitnessDetails({
                   ...witnessDetails,
                   witnessDetails,
-                  address: e.target.value,
+                  addressLine1: e.target.value,
                 });
               }}
             />
@@ -687,7 +761,7 @@ export default function PdfViewer() {
                 e.preventDefault();
                 setWitnessDetails({
                   ...witnessDetails,
-                  address: e.target.value,
+                  addressLine2: e.target.value,
                 });
               }}
             />
@@ -729,7 +803,6 @@ export default function PdfViewer() {
                 e.preventDefault();
                 setWitnessDetails({
                   ...witnessDetails,
-                  witnessDetails,
                   zipCode: e.target.value,
                 });
               }}
@@ -737,7 +810,7 @@ export default function PdfViewer() {
           </div>
 
           <div className="w-52 flex justify-between my-3">
-            <button>CANCEL</button>
+            <button onClick={() => { setWitnessPopup(true); setWitnessDetailsPopup(false) }}>CANCEL</button>
             <button
               onClick={() => {
                 setOpen(true);
