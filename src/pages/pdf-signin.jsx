@@ -343,7 +343,6 @@ export default function PdfViewer() {
         color: rgb(0, 0, 0),
       });
     }
-    // Page.drawText("HelloName", {
     Page.drawText(witnessName.firstName + witnessName.lastName, {
       x: wforwitnessname,
       // x: 20,
@@ -352,7 +351,6 @@ export default function PdfViewer() {
       size: 12,
       color: rgb(0, 0, 0),
     });
-    // Page.drawText("HelloAddress", {
     Page.drawText(witnessDetails.addressLine1+witnessDetails.addressLine2 , {
       x: wforwitnessaddress,
       // x: 40,
@@ -374,7 +372,7 @@ export default function PdfViewer() {
 
   return (
     <>
-      <div className="flex items-center justify-center">
+      <div className="md:flex md:items-center md:justify-center md:flex-row overflow-scroll flex-col">
         {file && (
           <Document
             className="w-min h-min"
@@ -522,8 +520,7 @@ export default function PdfViewer() {
             </Page>
           </Document>
         )}
-      </div>
-      <div className="absolute top-72 right-[440px]">
+      <div className="md:ml-10 md:border-2 md:border-blue-500 md:flex-col justify-around mt-10 flex flex-row">
         {showButtonForSave === false ? (
           <button
             className="p-5 flex flex-wrap w-28 h-28 items-center justify-center rounded-md text-white bg-black tracking-widest mb-6"
@@ -543,6 +540,7 @@ export default function PdfViewer() {
         <button className="p-5 flex flex-wrap w-28 h-28 items-center justify-center rounded-md text-white bg-black tracking-widest">
           CANCEL
         </button>
+      </div>
       </div>
       <input type="file" onChange={onFileChange} />
       <Popup
