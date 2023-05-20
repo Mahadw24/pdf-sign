@@ -26,11 +26,11 @@ body {
 .popup-content {
   width: 550px !important;
   height: 350px !important;
-  background: transparent !important;
+/*   background: transparent !important; */
   border: none !important;
 }
 
 .popup-overlay{
-  backdrop-filter: none;
-  background: none !important;
+/*   backdrop-filter: none; */
+/*   background: none !important; */
 }
