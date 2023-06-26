@@ -520,7 +520,8 @@ export default function PdfViewer() {
             </Page>
           </Document>
         )}
-      <div className="md:ml-10 md:border-2 md:border-blue-500 md:flex-col justify-around mt-10 flex flex-row">
+        {file && 
+      <div className="md:ml-10 md:flex-col justify-around mt-10 flex flex-row">
         {showButtonForSave === false ? (
           <button
             className="p-5 flex flex-wrap w-28 h-28 items-center justify-center rounded-md text-white bg-black tracking-widest mb-6"
@@ -541,6 +542,7 @@ export default function PdfViewer() {
           CANCEL
         </button>
       </div>
+        }
       </div>
       <input type="file" onChange={onFileChange} />
       <Popup
