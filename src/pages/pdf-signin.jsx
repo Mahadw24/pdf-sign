@@ -113,6 +113,14 @@ export default function PdfViewer() {
     setPageNumber(1);
   }
 
+  function nextPage(event) {
+    setPageNumber((prev) => prev + 1))
+  }
+
+  function prevPage(event) {
+    setPageNumber((prev) => prev - 1))
+  }
+
   function arrayBufferToFile(buffer, fileName, fileType) {
     const blob = new Blob([buffer], { type: fileType });
     return new File([blob], fileName, { type: fileType });
@@ -543,6 +551,12 @@ export default function PdfViewer() {
         </button>
       </div>
         }
+        <button onClick={nextPage}>
+        Next Page
+        </button>
+        <button onClick={prevPage}>
+        Prev Page
+        </button>
       </div>
       <input type="file" onChange={onFileChange} />
       <Popup
