@@ -551,13 +551,13 @@ export default function PdfViewer() {
         </button>
       </div>
         }
+      </div>
         <button onClick={nextPage}>
         Next Page
         </button>
         <button onClick={prevPage}>
         Prev Page
         </button>
-      </div>
       <input type="file" onChange={onFileChange} />
       <Popup
         open={open}
