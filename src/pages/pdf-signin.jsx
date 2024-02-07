@@ -114,11 +114,11 @@ export default function PdfViewer() {
   }
 
   function nextPage(event) {
-    setPageNumber((prev) => prev + 1));
+    setPageNumber((prev) => prev + 1);
   }
 
   function prevPage(event) {
-    setPageNumber((prev) => prev - 1));
+    setPageNumber((prev) => prev - 1);
   }
 
   function arrayBufferToFile(buffer, fileName, fileType) {
