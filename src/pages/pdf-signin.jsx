@@ -113,13 +113,13 @@ export default function PdfViewer() {
     setPageNumber(1);
   }
 
-  function nextPage(event) {
-    setPageNumber((prev) => prev + 1))
-  }
+  // function nextPage(event) {
+  //   setPageNumber((prev) => prev + 1))
+  // }
 
-  function prevPage(event) {
-    setPageNumber((prev) => prev - 1))
-  }
+  // function prevPage(event) {
+  //   setPageNumber((prev) => prev - 1))
+  // }
 
   function arrayBufferToFile(buffer, fileName, fileType) {
     const blob = new Blob([buffer], { type: fileType });
